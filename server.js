@@ -12,14 +12,14 @@ const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(',') ?? '*' }));
 app.use(bodyParser.json({ limit: '2mb' }));
 
-// -------- Servir archivos estáticos de la landing --------
+// -------- Servir archivos estáticos desde la raíz --------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname)); // ahora busca archivos estáticos en la raíz
 
 // Endpoint principal para la demo web
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html')); // index.html en la raíz
 });
 
 // -------- OpenAI Client --------
