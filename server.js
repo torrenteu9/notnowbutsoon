@@ -5,11 +5,22 @@ import cors from 'cors';
 import { OpenAI } from 'openai';
 import fetch from 'node-fetch';
 import twilio from 'twilio';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(',') ?? '*' }));
 app.use(bodyParser.json({ limit: '2mb' }));
-app.use(express.static('public'));
+
+// -------- Servir archivos estáticos de la landing --------
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Endpoint principal para la demo web
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // -------- OpenAI Client --------
 if (!process.env.OPENAI_API_KEY) {
